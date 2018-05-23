@@ -3,6 +3,7 @@ const delayMilisecs = 3000; //TODO: configurable?
 let storage = {};
 let hidden = [];
 let hideWatched = true;
+let thumbnailContainer;
 const newLayout = document.querySelectorAll(".feed-item-container .yt-shelf-grid-item").length == 0; //is it the new (~fall 2017) YT layout?
 
 function isYouTubeWatched(item) {
@@ -90,6 +91,8 @@ function addHideWatchedCheckbox() {
 
     let messenger = document.getElementById("subs-grid");
     messenger.addEventListener("change", checkboxChange);
+
+    thumbnailContainer = document.querySelectorAll("ytd-section-list-renderer#primary")[0];
 }
 
 function buildButton(item, videoId) {
@@ -119,8 +122,7 @@ function getVideoId(item) {
 }
 
 function removeWatchedAndAddButton() {
-    let els = newLayout ? document.querySelectorAll("ytd-grid-video-renderer.style-scope.ytd-grid-renderer") : document.querySelectorAll(".feed-item-container .yt-shelf-grid-item");
-    //TODO: OLD LAYOUT - still needed?
+    let els = thumbnailContainer.querySelectorAll("ytd-grid-video-renderer.style-scope.ytd-grid-renderer");
 
     for (item of els) {
         let stored = getVideoId(item) in storage;
