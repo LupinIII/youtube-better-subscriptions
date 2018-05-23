@@ -6,18 +6,10 @@
     position: absolute;
     top: 3px;
     left: 3px;
+    z-index: 99;
+    cursor: pointer;
     border: none;
     border-radius: 2px;
-    background-color: hsl(0, 0%, 6.7%);
-    opacity: .6;
-}
-
-.subs-btn-mark-watched:hover {
+    background-color: #000000;
     opacity: .8;
-    cursor: pointer;
-}
-
-.subs-btn-mark-watched:active {
-    opacity: 1.0;
-    cursor: pointer;
 }
