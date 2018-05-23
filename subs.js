@@ -110,27 +110,19 @@ function buildButton(item, videoId) {
     return enclosingDiv;
 }
 
-function getVideoIdFromUrl(url) {
-    return url.split("=")[1].split("&")[0];
-}
-
-function getVideoId(item) {
-    return getVideoIdFromUrl(item.querySelectorAll("a")[0].getAttribute("href"));
-}
-
 function removeWatchedAndAddButton() {
     let els = newLayout ? document.querySelectorAll("ytd-grid-video-renderer.style-scope.ytd-grid-renderer") : document.querySelectorAll(".feed-item-container .yt-shelf-grid-item");
     //TODO: OLD LAYOUT - still needed?
 
     for (item of els) {
-        let stored = getVideoId(item) in storage;
+        let videoId = item.querySelectorAll("a#video-title")[0].getAttribute("href").match(/v=([-\w]+)/)[1];
         let ytWatched = isYouTubeWatched(item);
 
-        if (stored || ytWatched) {
+        if (videoId in storage || ytWatched) {
             hideItem(item);
 
-            if (stored && ytWatched) {
-                getStorage().remove(getVideoId(item)); //since its marked watched by YouTube, remove from storage to free space
+            if (videoId in storage && ytWatched) {
+                getStorage().remove(videoId); //since its marked watched by YouTube, remove from storage to free space
             }
         } else {
             let dismissableDiv = item.firstChild;
@@ -140,7 +132,6 @@ function removeWatchedAndAddButton() {
                 dismissableDiv = dismissableDiv.firstChild;
             }
 
-            let videoId = getVideoId(item);
             let button = buildButton(item, videoId);
             dismissableDiv.appendChild(button);
         }
