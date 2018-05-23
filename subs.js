@@ -157,11 +157,12 @@ getStorage().get(null, function (items) { //fill our map with watched videos
     storage = items;
 });
 
-addHideWatchedCheckbox();
-
 brwsr.storage.onChanged.addListener(storageChangeCallback);
 
 let intervalID = window.setInterval(function () {
+    if (document.getElementById("subs-grid") == null) {
+        addHideWatchedCheckbox();
+    }
     if (document.getElementById("subs-grid").checked) {
         removeWatchedAndAddButton();
     }
