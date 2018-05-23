@@ -5,18 +5,6 @@ let hidden = [];
 let hideWatched = true;
 const newLayout = document.querySelectorAll(".feed-item-container .yt-shelf-grid-item").length == 0; //is it the new (~fall 2017) YT layout?
 
-function isYouTubeWatched(item) {
-    return (
-        (!newLayout &&
-            (item.getElementsByClassName("watched").length > 0 ||
-                item.getElementsByClassName("contains-percent-duration-watched").length > 0)) || //has "WATCHED" on thumbnail
-        (newLayout &&
-            (item.querySelectorAll("yt-formatted-string.style-scope.ytd-thumbnail-overlay-playback-status-renderer").length > 0 || //has "WATCHED" on thumbnail
-                item.querySelectorAll("#progress.style-scope.ytd-thumbnail-overlay-resume-playback-renderer").length > 0) || //has progress bar on thumbnail
-            item.hasAttribute("is-dismissed")) //also hide empty blocks left in by pressing "HIDE" button
-    )
-}
-
 function markWatched(item, videoId, button) {
     if (hideWatched) {
         hideItem(item);
@@ -124,14 +112,9 @@ function removeWatchedAndAddButton() {
 
     for (item of els) {
         let stored = getVideoId(item) in storage;
-        let ytWatched = isYouTubeWatched(item);
 
-        if (stored || ytWatched) {
+        if (stored) {
             hideItem(item);
-
-            if (stored && ytWatched) {
-                getStorage().remove(getVideoId(item)); //since its marked watched by YouTube, remove from storage to free space
-            }
         } else {
             let dismissableDiv = item.firstChild;
             if (dismissableDiv.querySelectorAll("#mark-watched").length > 0) {
