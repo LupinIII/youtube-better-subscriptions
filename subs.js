@@ -81,6 +81,10 @@ function addHideWatchedCheckbox() {
     messenger.addEventListener("change", checkboxChange);
 
 	thumbnailContainer = document.querySelectorAll("ytd-section-list-renderer#primary")[0];
+
+	if (Object.keys(storage).length > 1000) { // 1000 - arbitrary number, maybe should be based on used storage bytes (not supported in FF yet)
+		trim_storage(900); // trim down to 900 entries
+	}
 }
 
 function buildButton(item, videoId) {
@@ -121,6 +125,16 @@ function removeWatchedAndAddButton() {
             dismissableDiv.appendChild(button);
         }
     }
+}
+
+function trim_storage(to_element_count) {
+	videoId_sorted_by_value = Object.keys(storage).sort(function(a,b){return storage[a]-storage[b]}); // sort videoIds (object property names) by value (view date)
+	if (videoId_sorted_by_value.length > to_element_count) {
+		videoId_sorted_by_value.slice(0, videoId_sorted_by_value.length - to_element_count).forEach(function(videoId) { // remove first x videoIds (oldest watched) from storage
+			getStorage().remove(videoId);
+			delete storage[videoId];
+		});
+	}
 }
 
 function storageChangeCallback(changes, area) {
